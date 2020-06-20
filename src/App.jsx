@@ -4,8 +4,9 @@ import { Toaster, toast } from 'sonner';
 import ParticleBackground from './components/ParticleBackground';
 import FileUploader from './components/FileUploader';
 import FileList from './components/FileList';
+import Logo from './components/Logo';
 import { mergeFiles } from './components/Merger';
-import { Download, Loader2, Sparkles, FileSignature } from 'lucide-react';
+import { Download, Loader2, Sparkles, FileSignature, ArrowLeft } from 'lucide-react';
 
 function App() {
   const [files, setFiles] = useState([]);
@@ -74,25 +75,7 @@ function App() {
         }} />
 
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            background: 'rgba(255, 255, 255, 0.1)',
-            padding: '0.5rem 1rem',
-            borderRadius: '50px',
-            marginBottom: '1rem',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
-            animation: 'fadeIn 1s ease-out'
-          }}>
-            <Sparkles size={16} color="#a5b4fc" />
-            <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#e2e8f0' }}>
-              Premium PDF Merger
-            </span>
-          </div>
-
-          <h1>OmniMerger</h1>
+          <Logo />
           <p className="subtitle">
             Drag, drop, and merge your documents with style.
           </p>
@@ -109,6 +92,31 @@ function App() {
               setFiles={setFiles}
               onClearAll={handleClearAll}
             />
+
+            {files.length === 0 && (
+              <div style={{
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'var(--text-secondary)',
+                opacity: 0.6,
+                minHeight: '300px',
+                textAlign: 'center',
+                border: '2px dashed rgba(255, 255, 255, 0.05)',
+                borderRadius: '20px',
+                background: 'rgba(255, 255, 255, 0.01)'
+              }}>
+                <ArrowLeft size={48} style={{ marginBottom: '1rem', animation: 'bounceLeft 2s infinite' }} />
+                <h3 style={{ fontSize: '1.5rem', margin: '0 0 0.5rem 0', color: 'var(--text-primary)' }}>
+                  Start Merging
+                </h3>
+                <p style={{ fontSize: '1rem', maxWidth: '200px' }}>
+                  Add your PDF, DOCX, or Image files to the left to begin
+                </p>
+              </div>
+            )}
 
             {files.length > 0 && (
               <div style={{
@@ -214,7 +222,12 @@ function App() {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
         }
-        
+
+        @keyframes bounceLeft {
+          0%, 100% { transform: translateX(0); }
+          50% { transform: translateX(-10px); }
+        }
+
         input:focus {
           border-color: var(--primary-color) !important;
           box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
