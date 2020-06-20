@@ -17,7 +17,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { FileText, Image as ImageIcon, X, GripVertical } from 'lucide-react';
 
-const SortableItem = ({ id, file, onRemove }) => {
+const SortableItem = ({ id, file, onRemove, sizeVariant }) => {
     const {
         attributes,
         listeners,
@@ -36,11 +36,18 @@ const SortableItem = ({ id, file, onRemove }) => {
     };
 
     const getIcon = (type) => {
-        if (type.includes('pdf')) return <FileText size={24} color="#f87171" />;
-        if (type.includes('image')) return <ImageIcon size={24} color="#60a5fa" />;
-        if (type.includes('word') || type.includes('docx') || type.includes('officedocument')) return <FileText size={24} color="#2563eb" />;
-        return <FileText size={24} />;
+        const size = sizeVariant === 'dense' ? 16 : 24;
+        if (type.includes('pdf')) return <FileText size={size} color="#f87171" />;
+        if (type.includes('image')) return <ImageIcon size={size} color="#60a5fa" />;
+        if (type.includes('word') || type.includes('docx') || type.includes('officedocument')) return <FileText size={size} color="#2563eb" />;
+        return <FileText size={size} />;
     };
+
+    // Dynamic styles based on variant
+    const padding = sizeVariant === 'dense' ? '0.5rem 0.8rem' : sizeVariant === 'compact' ? '0.8rem 1rem' : '1rem 1.5rem';
+    const marginBottom = sizeVariant === 'dense' ? '0.4rem' : '0.8rem';
+    const fontSize = sizeVariant === 'dense' ? '0.9rem' : '1.05rem';
+    const iconContainerSize = sizeVariant === 'dense' ? '30px' : '45px';
 
     return (
         <div
@@ -49,11 +56,11 @@ const SortableItem = ({ id, file, onRemove }) => {
                 ...style,
                 display: 'flex',
                 alignItems: 'center',
-                padding: '1rem 1.5rem',
-                marginBottom: '0.8rem',
+                padding,
+                marginBottom,
                 background: isDragging ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.03)',
                 border: '1px solid rgba(255, 255, 255, 0.05)',
-                borderRadius: '16px',
+                borderRadius: '12px',
                 userSelect: 'none',
                 backdropFilter: 'blur(10px)',
                 boxShadow: isDragging
@@ -69,23 +76,24 @@ const SortableItem = ({ id, file, onRemove }) => {
                 {...listeners}
                 style={{
                     cursor: 'grab',
-                    marginRight: '1rem',
+                    marginRight: sizeVariant === 'dense' ? '0.5rem' : '1rem',
                     color: 'var(--text-secondary)',
                     display: 'flex',
                     alignItems: 'center',
-                    padding: '0.5rem',
+                    padding: '0.2rem',
                     borderRadius: '8px',
                 }}
                 className="drag-handle"
             >
-                <GripVertical size={20} />
+                <GripVertical size={sizeVariant === 'dense' ? 16 : 20} />
             </div>
 
             <div style={{
-                marginRight: '1.5rem',
+                marginRight: sizeVariant === 'dense' ? '0.8rem' : '1.5rem',
                 background: 'rgba(255, 255, 255, 0.05)',
-                padding: '0.8rem',
-                borderRadius: '12px',
+                width: iconContainerSize,
+                height: iconContainerSize,
+                borderRadius: '8px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -95,36 +103,39 @@ const SortableItem = ({ id, file, onRemove }) => {
 
             <div style={{ flex: 1, overflow: 'hidden' }}>
                 <p style={{
-                    margin: '0 0 0.3rem 0',
+                    margin: sizeVariant === 'dense' ? '0' : '0 0 0.3rem 0',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     fontWeight: 500,
-                    fontSize: '1.05rem',
+                    fontSize,
                     color: 'var(--text-primary)',
                 }}>
                     {file.name}
                 </p>
-                <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                    {(file.size / 1024 / 1024).toFixed(2)} MB
-                </p>
+                {sizeVariant !== 'dense' && (
+                    <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                        {(file.size / 1024 / 1024).toFixed(2)} MB
+                    </p>
+                )}
             </div>
 
             <button
                 onClick={() => onRemove(id)}
                 style={{
                     background: 'rgba(255, 255, 255, 0.05)',
-                    padding: '0.6rem',
+                    padding: sizeVariant === 'dense' ? '0.3rem' : '0.6rem',
                     color: 'var(--text-secondary)',
                     border: 'none',
-                    borderRadius: '10px',
+                    borderRadius: '8px',
                     cursor: 'pointer',
                     transition: 'all 0.2s',
                     boxShadow: 'none',
+                    marginLeft: '0.5rem'
                 }}
                 className="remove-btn"
             >
-                <X size={18} />
+                <X size={sizeVariant === 'dense' ? 14 : 18} />
             </button>
 
             <style>{`
@@ -158,6 +169,9 @@ const FileList = ({ files, setFiles, onClearAll }) => {
         })
     );
 
+    // Calculate size variant based on file count
+    const sizeVariant = files.length > 15 ? 'dense' : files.length > 7 ? 'compact' : 'comfortable';
+
     const handleDragEnd = (event) => {
         const { active, over } = event;
 
@@ -178,8 +192,13 @@ const FileList = ({ files, setFiles, onClearAll }) => {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                marginBottom: '1.5rem',
-                padding: '0 0.5rem'
+                marginBottom: '1rem',
+                padding: '0 0.5rem',
+                position: 'sticky',
+                top: 0,
+                background: 'var(--glass-bg)', // Ensure header is visible over scrolling content if needed
+                zIndex: 10,
+                backdropFilter: 'blur(10px)'
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <h4 style={{
@@ -234,6 +253,7 @@ const FileList = ({ files, setFiles, onClearAll }) => {
                             id={file.id}
                             file={file.file}
                             onRemove={(id) => setFiles(files.filter(f => f.id !== id))}
+                            sizeVariant={sizeVariant}
                         />
                     ))}
                 </SortableContext>

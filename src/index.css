@@ -21,17 +21,23 @@ body {
   font-family: var(--font-family);
   background-color: var(--bg-dark);
   color: var(--text-primary);
-  overflow-x: hidden;
+  overflow: hidden;
+  /* Prevent body scroll */
+  height: 100vh;
+  width: 100vw;
 }
 
 #root {
-  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 1rem;
+  /* Reduced padding */
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .glass-panel {
@@ -45,9 +51,15 @@ body {
     0 4px 30px rgba(0, 0, 0, 0.1),
     0 0 0 1px rgba(255, 255, 255, 0.05) inset,
     0 20px 40px rgba(0, 0, 0, 0.4);
-  padding: 3rem;
+  padding: 2rem;
+  /* Reduced padding */
   width: 100%;
-  max-width: 700px;
+  max-width: 1200px;
+  /* Increased max-width */
+  height: 90vh;
+  /* Fixed height */
+  display: flex;
+  flex-direction: column;
   position: relative;
   overflow: hidden;
   animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);

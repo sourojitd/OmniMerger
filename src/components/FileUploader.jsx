@@ -41,7 +41,7 @@ const FileUploader = ({ onFilesSelected }) => {
       style={{
         border: '2px dashed var(--glass-border)',
         borderRadius: '20px',
-        padding: '4rem 2rem',
+        padding: '2rem',
         textAlign: 'center',
         cursor: 'pointer',
         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -54,6 +54,11 @@ const FileUploader = ({ onFilesSelected }) => {
         animation: 'fadeIn 1s ease-out 0.4s backwards',
         boxShadow: isDragging ? '0 0 30px rgba(99, 102, 241, 0.2)' : 'none',
         transform: isDragging ? 'scale(1.02)' : 'scale(1)',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
       <input

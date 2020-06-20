@@ -204,14 +204,41 @@ function App() {
         .app-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 3rem;
-          align-items: start;
+          gap: 2rem;
+          align-items: stretch; /* Changed from start to stretch */
+          flex: 1;
+          min-height: 0; /* Crucial for nested scrolling */
+          overflow: hidden; /* Prevent grid itself from scrolling */
+        }
+
+        .upload-section, .list-section {
+          height: 100%;
+          overflow-y: auto;
+          overflow-x: hidden;
+          display: flex;
+          flex-direction: column;
+          padding-right: 0.5rem; /* Space for scrollbar */
+        }
+        
+        /* Custom Scrollbar for sections */
+        .upload-section::-webkit-scrollbar,
+        .list-section::-webkit-scrollbar {
+          width: 4px;
+        }
+        .upload-section::-webkit-scrollbar-track,
+        .list-section::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.02);
+        }
+        .upload-section::-webkit-scrollbar-thumb,
+        .list-section::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 4px;
         }
 
         @media (max-width: 768px) {
           .app-grid {
             grid-template-columns: 1fr;
-            gap: 2rem;
+            gap: 1rem;
           }
         }
 
